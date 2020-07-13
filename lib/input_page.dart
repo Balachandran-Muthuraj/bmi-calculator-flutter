@@ -1,39 +1,31 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'reusable_card.dart';
 import 'icon_content.dart';
+import 'Constants.dart';
 
 class InputPage extends StatefulWidget {
   @override
   _InputPageState createState() => _InputPageState();
 }
 
-const bottomcontainerheight = 80.0;
-const activecardcolor = Color(0xFF1D1E33);
-const inactivecardcolor = Color(0xFF111328);
-const containercolor = Color(0xFFEB1555);
+enum Gender {
+  male,
+  female,
+}
+enum Symbol {
+  plus,
+  minus,
+}
 
 class _InputPageState extends State<InputPage> {
-  Color malecardcolor = inactivecardcolor;
-  Color femalecardcolor = inactivecardcolor;
-  void updategender(int gender) {
-    if (gender == 1) {
-      if (malecardcolor == inactivecardcolor) {
-        malecardcolor = activecardcolor;
-        femalecardcolor = inactivecardcolor;
-      } else {
-        malecardcolor = inactivecardcolor;
-      }
-    } else {
-      if (femalecardcolor == inactivecardcolor) {
-        femalecardcolor = activecardcolor;
-        malecardcolor = inactivecardcolor;
-      } else {
-        femalecardcolor = inactivecardcolor;
-      }
-    }
-  }
+  Color malecardcolor = kinactivecardcolor;
+  Color femalecardcolor = kinactivecardcolor;
 
+  int height = 180;
+  int Weight=60;
+  Gender Selectedgender;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,30 +33,34 @@ class _InputPageState extends State<InputPage> {
         title: Text('BMI CALCULATOR'),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Expanded(
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        updategender(1);
-                      });
-                    },
-                    child: Reusablewidget(malecardcolor,
-                        IconContent('MALE', FontAwesomeIcons.mars)),
-                  ),
+                  child: Reusablewidget(
+                      colours: Selectedgender == Gender.male
+                          ? kactivecardcolor
+                          : kinactivecardcolor,
+                      CardChild: IconContent('MALE', FontAwesomeIcons.mars),
+                      onPress: () {
+                        setState(() {
+                          Selectedgender = Gender.male;
+                        });
+                      }),
                 ),
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () {
+                  child: Reusablewidget(
+                    colours: Selectedgender == Gender.female
+                        ? kactivecardcolor
+                        : kinactivecardcolor,
+                    CardChild: IconContent('FEMALE', FontAwesomeIcons.venus),
+                    onPress: () {
                       setState(() {
-                        updategender(2);
+                        Selectedgender = Gender.female;
                       });
                     },
-                    child: Reusablewidget(femalecardcolor,
-                        IconContent('FEMALE', FontAwesomeIcons.venus)),
                   ),
                 )
               ],
@@ -74,7 +70,57 @@ class _InputPageState extends State<InputPage> {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: Reusablewidget(activecardcolor,IconContent('FEMALE', FontAwesomeIcons.venus)),
+                  child: Reusablewidget(
+                    colours: kactivecardcolor,
+                    CardChild: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'HEIGHT',
+                          style: ktextstyle,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: <Widget>[
+                            Text(
+                              height.toString(),
+                              style: ktextstyleW900,
+                            ),
+                            Text(
+                              'cm',
+                              style: ktextstyle,
+                            )
+                          ],
+                        ),
+                        SliderTheme(
+                          data: SliderTheme.of(context).copyWith(
+                            activeTrackColor: Colors.white,
+                            thumbColor: Color(0xFFEB1555),
+                            overlayColor: Color(0x29EB1555),
+                            thumbShape:
+                                RoundSliderThumbShape(enabledThumbRadius: 15),
+                            overlayShape:
+                                RoundSliderOverlayShape(overlayRadius: 30),
+                          ),
+                          child: Slider(
+                            activeColor: Color(0xFFEB1555),
+                            inactiveColor: Color(0xFF8D8E98),
+                            value: height.toDouble(),
+                            min: 120.0,
+                            max: 220.0,
+                            onChanged: (double newvalue) {
+                              setState(() {
+                                height = newvalue.round();
+                              });
+                              // print(oldvalue);
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 )
               ],
             ),
@@ -83,19 +129,48 @@ class _InputPageState extends State<InputPage> {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: Reusablewidget(activecardcolor, IconContent('FEMALE', FontAwesomeIcons.venus)),
+                  child: Reusablewidget(
+                    colours: kactivecardcolor,
+                    CardChild: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'Weight',style: ktextstyle,
+                        ),Text(
+                          Weight.toString(),style: ktextstyleW900,
+                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+
+                          RoundIconButton(IconData:FontAwesomeIcons.minus,onpress:() {
+                          setState(() {
+                          Weight--;
+                          });
+                          },),SizedBox(
+                            width: 10,
+                          ), RoundIconButton(IconData:FontAwesomeIcons.plus,onpress:() {
+                          setState(() {
+                          Weight++;
+                          });
+                          },)
+                        ],
+                        )
+                      ],
+                    ),
+                  ),
                 ),
                 Expanded(
-                  child: Reusablewidget(activecardcolor,IconContent('FEMALE', FontAwesomeIcons.venus)),
+                  child: Reusablewidget(colours: kactivecardcolor),
                 )
               ],
             ),
           ),
           Container(
             margin: EdgeInsets.all((10.0)),
-            height: bottomcontainerheight,
+            height: kbottomcontainerheight,
             width: double.infinity,
-            color: containercolor,
+            color: kcontainercolor,
           )
         ],
       ),
@@ -108,3 +183,24 @@ class _InputPageState extends State<InputPage> {
     );
   }
 }
+class RoundIconButton extends StatelessWidget {
+  RoundIconButton({this.IconData,this.onpress});
+  final IconData;
+
+  final onpress;
+
+  @override
+  Widget build(BuildContext context) {
+    return RawMaterialButton(
+      child:Icon(IconData),
+      onPressed:onpress,
+      elevation: 6.0,
+      constraints: BoxConstraints.tightFor(width: 56.0,height:56.0),
+      shape: CircleBorder(
+
+      ),fillColor: Color(0xFF4C4F5E),
+    );
+  }
+}
+
+
