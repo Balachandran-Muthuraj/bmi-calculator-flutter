@@ -1,9 +1,13 @@
+import 'package:bmi_calculator/calculatebmi.dart';
+import 'package:bmi_calculator/screen/results.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'reusable_card.dart';
-import 'icon_content.dart';
-import 'Constants.dart';
+import 'package:bmi_calculator/components/reusable_card.dart';
+import 'package:bmi_calculator/components/icon_content.dart';
+import 'package:bmi_calculator/Constants.dart';
+import 'package:bmi_calculator/components/roundiconbutton.dart';
+import 'package:bmi_calculator/components/bottombutton.dart';
 
 class InputPage extends StatefulWidget {
   @override
@@ -14,10 +18,7 @@ enum Gender {
   male,
   female,
 }
-enum Symbol {
-  plus,
-  minus,
-}
+
 
 class _InputPageState extends State<InputPage> {
   Color malecardcolor = kinactivecardcolor;
@@ -25,14 +26,18 @@ class _InputPageState extends State<InputPage> {
 
   int height = 180;
   int Weight=60;
+  int Age=20;
   Gender Selectedgender;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('BMI CALCULATOR'),
       ),
+
       body: Column(
+
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Expanded(
@@ -161,17 +166,47 @@ class _InputPageState extends State<InputPage> {
                   ),
                 ),
                 Expanded(
-                  child: Reusablewidget(colours: kactivecardcolor),
+                  child: Reusablewidget(colours: kactivecardcolor,CardChild: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+
+                      Text('Age',style: ktextstyle,),Text(
+                        Age.toString(),style: ktextstyleW900,
+                      ),Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+
+                          RoundIconButton(
+                            IconData: FontAwesomeIcons.minus,onpress: ()
+                            {
+                              setState(() {
+                                Age--;
+                              });
+                            },
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),RoundIconButton(
+                            IconData: FontAwesomeIcons.plus,onpress: (){
+                              setState(() {
+                                Age++;
+                              });
+                          },
+                          )
+                        ],
+                      )
+                    ],
+                  ),),
                 )
               ],
             ),
           ),
-          Container(
-            margin: EdgeInsets.all((10.0)),
-            height: kbottomcontainerheight,
-            width: double.infinity,
-            color: kcontainercolor,
-          )
+          Bottombutton(buttoncontent: 'CALCULATE',onTAP: (){
+
+            Calculatebmi calc=  Calculatebmi(height,Weight);
+            results result=results(bmi: calc.ManipulateBMIresult(),interpretation: calc.getInterpretationresult(),resultstatus: calc.getresult());
+            Navigator.pushNamed(context, '/result',arguments: result);
+          },)
         ],
       ),
 /*      floatingActionButton: Theme(
@@ -183,24 +218,8 @@ class _InputPageState extends State<InputPage> {
     );
   }
 }
-class RoundIconButton extends StatelessWidget {
-  RoundIconButton({this.IconData,this.onpress});
-  final IconData;
 
-  final onpress;
 
-  @override
-  Widget build(BuildContext context) {
-    return RawMaterialButton(
-      child:Icon(IconData),
-      onPressed:onpress,
-      elevation: 6.0,
-      constraints: BoxConstraints.tightFor(width: 56.0,height:56.0),
-      shape: CircleBorder(
 
-      ),fillColor: Color(0xFF4C4F5E),
-    );
-  }
-}
 
 
